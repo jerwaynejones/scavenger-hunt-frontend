@@ -61,6 +61,7 @@ function GiftDescription({ onSubmit, loading }) {
                         <FormControl fullWidth variant="outlined" disabled={loading}>
                             <InputLabel id="difficulty-select-label">Difficulty Level</InputLabel>
                             <Select
+                                variant='outlined'
                                 labelId="difficulty-select-label"
                                 value={difficultyLevel}
                                 onChange={(e) => setDifficultyLevel(e.target.value)}

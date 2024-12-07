@@ -25,7 +25,7 @@ function App() {
     const [initialClue, setInitialClue] = useState('');
     const [loadingTheme, setLoadingTheme] = useState(false);
     const [loadingInitialClue, setLoadingInitialClue] = useState(false);
-    const [huntToken, setHuntToken] = useState('');
+    const [ setHuntToken] = useState('');
     const [existingHunt, setExistingHunt] = useState(null);
 
     const location = useLocation();
