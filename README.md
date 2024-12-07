@@ -1,5 +1,3 @@
-Yes, that looks great! Here's a slightly revised version with some formatting adjustments for clarity and consistency in the markdown document. This version ensures that the README is well-structured and readable:
-
 # Scavenger Hunt Frontend
 
 This React-based frontend application allows users to create customized scavenger hunts with AI-generated clues. It features a clean, modern UI built with Material-UI and offers functionalities like clue generation, theme customization, and clue regeneration, making it ideal for parties, classrooms, and gift reveals.
