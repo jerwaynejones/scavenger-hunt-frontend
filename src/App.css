@@ -38,6 +38,11 @@
   margin: 0 auto;
   display: block;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}
+
 body {
   background-size: cover;
 }

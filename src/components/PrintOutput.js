@@ -54,6 +54,7 @@ function PrintOutput({ hunt, onBack }) {
                       line-height: 1.2;
                       white-space: pre-line;
                       color: #000; 
+                    
                     }
 
                     .clue-location {
@@ -62,6 +63,7 @@ function PrintOutput({ hunt, onBack }) {
                       right: 0.1in;
                       font-size: 0.7rem;
                       color: #D3D3D3;
+                     
                     }
                   }
                 `}
@@ -72,17 +74,25 @@ function PrintOutput({ hunt, onBack }) {
                     Your Results
                 </Typography>
 
-                <div className="clue-grid">
-                    {hunt.steps.map((step, index) => (
-                        <div className="clue-card" key={index}>
-                            <div className="clue-text">{step.clue.replace(/\r?\n|\r/g, '')}</div>
-                            {step.location && <div className="clue-location">{step.location}</div>}
-                        </div>
+                <ol className="clue-grid">
+                    {[...hunt.steps].reverse().map((step, index) => (
+                        <li className="clue-card" key={index}>
+                            <div className="clue-text">
+                                {step.clue.replace(/\r?\n|\r/g, ' ')}
+                            </div>
+                            {step.location && (
+                                <div className="clue-location capitalize">
+                                    <strong>Location:</strong> {step.location}
+                                </div>
+                            )}
+                        </li>
                     ))}
-                </div>
+                </ol>
 
-                <Typography variant="h6" sx={{ mt: 2 }}>
+                <Typography variant="h6" sx={{mt: 2}}>
+                    <div className="capitalize">
                     Final Gift Location: {hunt.finalGiftLocation}
+                    </div>
                 </Typography>
             </div>
 
@@ -91,7 +101,7 @@ function PrintOutput({ hunt, onBack }) {
                 color="primary"
                 onClick={() => handlePrint()}
                 fullWidth
-                sx={{ mt: 2 }}
+                sx={{mt: 2}}
             >
                 Print or Save as PDF
             </Button>
@@ -100,7 +110,7 @@ function PrintOutput({ hunt, onBack }) {
                 color="secondary"
                 onClick={onBack}
                 fullWidth
-                sx={{ mt: 2 }}
+                sx={{mt: 2}}
             >
                 Go Back to Add More Clues
             </Button>

@@ -21,17 +21,32 @@ function ClueGenerator({
                            finalLocation,
                            difficultyLevel,
                            initialClue,
+                           clues,
+                           locations,
+                           setClues,
+                           setLocations,
                            onComplete
                        }) {
-    // Start with one initial clue unlabeled.
-    const [clues, setClues] = useState([initialClue]);
-    const [locations, setLocations] = useState([]); // labels for clues: locations[i] labels clues[i]
+    // const [clues, setClues] = useState([initialClue]);
+    // const [locations, setLocations] = useState([]); // labels for clues: locations[i] labels clues[i]
     const [roomName, setRoomName] = useState('');
     const [hidingSpotDescription, setHidingSpotDescription] = useState('');
     const [loading, setLoading] = useState(false);
     const [regenerations, setRegenerations] = useState(0);
 
     const generateClue = async (isRegeneration = false) => {
+        // Validate theme and giftDescription before proceeding
+        if (!theme.trim()) {
+            alert('No theme found. Please go back and provide a gift description to generate a theme first.');
+            return;
+        }
+
+        if (!giftDescription.trim()) {
+            alert('No gift description found. Please go back and provide it before generating clues.');
+            return;
+        }
+
+        // If this is not a regeneration, ensure location details are provided
         if (!isRegeneration && (!roomName.trim() || !hidingSpotDescription.trim())) {
             alert('Please describe the location for this clue.');
             return;
@@ -39,31 +54,29 @@ function ClueGenerator({
 
         setLoading(true);
 
+        // Copy existing clues and locations
         const updatedClues = [...clues];
         const updatedLocations = [...locations];
 
-        // If not regenerating and there's an unlabeled clue (clues.length > locations.length),
-        // label it with the new user-provided location.
+        // If generating a new clue (not regeneration), label the previous clue with the provided location
         if (!isRegeneration && clues.length > locations.length) {
             const newLabel = `${roomName.trim()} - ${hidingSpotDescription.trim()}`;
             updatedLocations.push(newLabel);
         }
 
-        // Determine previousLocation for the API call:
-        // If we have no labeled locations, the first clue was at finalLocation.
-        // If we have labeled locations, the previous location is the last labeled location.
+        // Determine previousLocation for the API call
         let previousLocation = finalLocation;
         if (updatedLocations.length > 0) {
             previousLocation = updatedLocations[updatedLocations.length - 1];
         }
 
-        // For regeneration, nextLocation doesn't change labeling logic,
-        // just regenerates clue text. For new clues, nextLocation is user input.
+        // Determine nextLocation for the API call
         const nextLocation = isRegeneration
             ? (updatedLocations.length > 0 ? updatedLocations[updatedLocations.length - 1] : finalLocation)
             : `${roomName.trim()} - ${hidingSpotDescription.trim()}`;
 
         try {
+            // Now that we have all the required info, make the API call
             const response = await api.post('/clues/generate', {
                 theme,
                 giftDescription,
@@ -75,22 +88,21 @@ function ClueGenerator({
             const newClue = response.data.clue;
 
             if (isRegeneration) {
-                // Regenerate the last clue with new text
+                // Replace the last clue with the regenerated one
                 updatedClues[updatedClues.length - 1] = newClue;
                 setClues(updatedClues);
                 setRegenerations(regenerations + 1);
             } else {
-                // Add the new clue unlabeled at the end
+                // Add a new clue and location
                 updatedClues.push(newClue);
                 setClues(updatedClues);
                 setLocations(updatedLocations);
                 setRegenerations(0);
 
-                // Clear the input fields after generation
+                // Clear inputs for the next clue
                 setRoomName('');
                 setHidingSpotDescription('');
             }
-
         } catch (error) {
             console.error('Error generating clue:', error);
             alert('Error generating clue. Please try again.');
@@ -98,6 +110,7 @@ function ClueGenerator({
             setLoading(false);
         }
     };
+
 
     const handleRegenerate = () => {
         if (regenerations < 3) {
