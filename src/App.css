@@ -38,3 +38,6 @@
   margin: 0 auto;
   display: block;
 }
+body {
+  background-size: cover;
+}

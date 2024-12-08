@@ -78,6 +78,8 @@ const muiTheme = createTheme({
                     height: '100%',  // Set the height to 100% of the html element
                     minHeight: '100vh', // Minimum height is 100% of the viewport height
                     background: 'linear-gradient(180deg, #5D3FD3 0%, #121212 100%)',
+                    backgroundAttachment: 'fixed',
+                    backgroundSize: 'cover',
                     color: '#FFFFFF',
                     '-webkit-font-smoothing': 'antialiased',
                     '-moz-osx-font-smoothing': 'grayscale',

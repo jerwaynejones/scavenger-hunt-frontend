@@ -21,6 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "cp -r build /var/www/scavenger-hunt-frontend/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,18 +1,16 @@
-// src/App.js
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import './App.css';
 import GiftDescription from './components/GiftDescription';
 import ClueGenerator from './components/ClueGenerator';
 import PrintOutput from './components/PrintOutput';
 import AdSlot from './components/Ad';
-import { ThemeProvider } from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles';
 import muiTheme from './muiTheme';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Stepper, Step, StepLabel, Typography, Box } from '@mui/material';
+import {Container, Stepper, Step, StepLabel, Typography, Box} from '@mui/material';
 import api from './api';
 import Logo from './assets/logo.png';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import {useLocation, useNavigate} from 'react-router-dom';
 
 function App() {
     const [giftDescription, setGiftDescription] = useState('');
@@ -25,22 +23,13 @@ function App() {
     const [initialClue, setInitialClue] = useState('');
     const [loadingTheme, setLoadingTheme] = useState(false);
     const [loadingInitialClue, setLoadingInitialClue] = useState(false);
-    const [ setHuntToken] = useState('');
+    const [huntToken, setHuntToken] = useState('');
     const [existingHunt, setExistingHunt] = useState(null);
 
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Check if URL includes a token (e.g. /hunt/<token>)
-    useEffect(() => {
-        const pathParts = location.pathname.split('/').filter(Boolean); // e.g. ["hunt", "<token>"]
-        if (pathParts[0] === 'hunt' && pathParts[1]) {
-            const token = pathParts[1];
-            fetchHunt(token);
-        }
-    }, [location]);
-
-    const fetchHunt = async (token) => {
+    const fetchHunt = useCallback(async (token) => {
         try {
             const response = await api.get(`/hunts/${token}`);
             const hunt = response.data;
@@ -52,12 +41,19 @@ function App() {
             setCurrentStep(2); // Go directly to print step
         } catch (error) {
             console.error('No hunt found or error fetching hunt:', error);
-            // If no hunt found, just proceed as new
             setCurrentStep(0);
         }
-    };
+    }, [setExistingHunt, setHuntToken, setClues, setLocations, setFinalLocation, setCurrentStep]);
 
-    const handleGiftDescriptionSubmit = async ({ giftDescription, finalLocation, difficultyLevel }) => {
+    useEffect(() => {
+        const pathParts = location.pathname.split('/').filter(Boolean);
+        if (pathParts[0] === 'hunt' && pathParts[1]) {
+            const token = pathParts[1];
+            fetchHunt(token);
+        }
+    }, [location, fetchHunt]);
+
+    const handleGiftDescriptionSubmit = async ({giftDescription, finalLocation, difficultyLevel}) => {
         setGiftDescription(giftDescription);
         setFinalLocation(finalLocation);
         setDifficultyLevel(difficultyLevel);
@@ -65,7 +61,7 @@ function App() {
 
         try {
             // Generate the narrative theme
-            const themeResponse = await api.post('/theme/generate', { giftDescription });
+            const themeResponse = await api.post('/theme/generate', {giftDescription});
             const generatedTheme = themeResponse.data.theme;
             setNarrativeTheme(generatedTheme);
 
@@ -91,24 +87,28 @@ function App() {
         }
     };
 
-    const handleCluesComplete = async ({ clues, locations }) => {
+    const handleCluesComplete = async ({clues, locations}) => {
         setClues(clues);
         setLocations(locations);
 
-        // On completion, save hunt and receive a unique token
+
         try {
             const response = await api.post('/hunts/save', {
                 theme: narrativeTheme,
-                steps: clues.map((clue, index) => ({ clue, location: locations[index] })),
+                steps: clues.map((clue, index) => ({clue, location: locations[index]})),
                 finalGiftLocation: finalLocation
             });
 
-            const { token } = response.data;
+            const {token} = response.data;
+
+            if (!token) {
+                console.error('No token returned from the server response:', response.data)
+                alert('Error saving hunt. Please try again.');
+            }
             setHuntToken(token);
 
-            // Push user to a route like /hunt/<token>
+
             navigate(`/hunt/${token}`);
-            // The user can bookmark this URL
         } catch (error) {
             console.error('Error saving hunt:', error);
             alert('Error saving hunt. Please try again.');
@@ -116,19 +116,20 @@ function App() {
     };
 
     const handleBackFromPrint = () => {
-        setCurrentStep(1); // Go back to ClueGenerator
+        setCurrentStep(1);
+        setExistingHunt(null);
     };
 
     return (
         <ThemeProvider theme={muiTheme}>
-            <CssBaseline />
-            <Container maxWidth="sm" sx={{ py: 1 }} display='flex'>
+            <CssBaseline/>
+            <Container maxWidth="sm" sx={{py: 1}} display='flex'>
                 <Typography variant="h2" alignSelf='center'>
-                    <img src={Logo} alt="ScavengerHuntWizard.com" className="logo" />
+                    <img src={Logo} alt="ScavengerHuntWizard.com" className="logo"/>
                 </Typography>
             </Container>
 
-            <Container maxWidth="md" style={{ marginTop: '2rem' }}>
+            <Container maxWidth="md" style={{marginTop: '2rem'}}>
                 <Stepper activeStep={existingHunt ? 2 : currentStep} alternativeLabel>
                     <Step>
                         <StepLabel>Describe Gift & Final Location</StepLabel>
@@ -141,7 +142,6 @@ function App() {
                     </Step>
                 </Stepper>
 
-                {/* If we loaded an existing hunt, just show PrintOutput */}
                 {existingHunt ? (
                     <>
                         <PrintOutput
@@ -154,13 +154,13 @@ function App() {
                             }}
                             onBack={handleBackFromPrint}
                         />
-                        <Box sx={{ my: 4 }}>
+                        <Box sx={{my: 4}}>
                             <AdSlot
                                 client="ca-pub-9243474032873313"
                                 slot="xxxxxxxxxx"
                                 format="auto"
                                 responsive="true"
-                                style={{ display: 'block' }}
+                                style={{display: 'block'}}
                             />
                         </Box>
                     </>
@@ -172,13 +172,13 @@ function App() {
                                     onSubmit={handleGiftDescriptionSubmit}
                                     loading={loadingTheme || loadingInitialClue}
                                 />
-                                <Box sx={{ my: 4 }}>
+                                <Box sx={{my: 4}}>
                                     <AdSlot
                                         client="ca-pub-9243474032873313"
                                         slot="xxxxxxxxxx"
                                         format="auto"
                                         responsive="true"
-                                        style={{ display: 'block' }}
+                                        style={{display: 'block'}}
                                     />
                                 </Box>
                             </>
@@ -193,13 +193,13 @@ function App() {
                                     initialClue={initialClue}
                                     onComplete={handleCluesComplete}
                                 />
-                                <Box sx={{ my: 4 }}>
+                                <Box sx={{my: 4}}>
                                     <AdSlot
                                         client="ca-pub-9243474032873313"
                                         slot="xxxxxxxxxx"
                                         format="auto"
                                         responsive="true"
-                                        style={{ display: 'block' }}
+                                        style={{display: 'block'}}
                                     />
                                 </Box>
                             </>
