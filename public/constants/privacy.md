@@ -1,5 +1,3 @@
-# Privacy Policy
-
 **Last Updated:** 12/16/2024
 
 At **ScavengerHuntWizard.com** ("we," "our," or "us"), we value the privacy of our visitors. This Privacy Policy explains how we handle information when you use our website.

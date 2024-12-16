@@ -12,7 +12,6 @@ function Footer() {
   const [termsContent, setTermsContent] = useState('');
 
   useEffect(() => {
-    // Fetch the markdown files from the public directory
     fetch('/constants/privacy.md')
       .then(response => response.text())
       .then(text => setPrivacyContent(text));
@@ -28,11 +27,11 @@ function Footer() {
   const handleOpenTerms = () => setOpenTerms(true);
   const handleCloseTerms = () => setOpenTerms(false);
 
-  // Custom link renderer for the Terms content
+
   const termsComponents = {
     a: ({ href, children, ...props }) => {
       if (href === '/privacy.md') {
-        // Instead of navigating, open the Privacy modal
+
         return (
           <MuiLink
             component="button"
@@ -40,7 +39,7 @@ function Footer() {
             color="secondary"
             {...props}
             onClick={() => {
-              handleCloseTerms(); // Close Terms modal before opening Privacy
+              handleCloseTerms();
               handleOpenPrivacy();
             }}
           >
@@ -48,7 +47,6 @@ function Footer() {
           </MuiLink>
         );
       }
-      // For all other links, just render a normal anchor
       return <a href={href} {...props}>{children}</a>;
     }
   };
@@ -81,7 +79,7 @@ function Footer() {
         </Box>
       </Container>
 
-      {/* Privacy Policy Modal */}
+
       <Dialog
         open={openPrivacy}
         onClose={handleClosePrivacy}
@@ -99,7 +97,7 @@ function Footer() {
         </DialogActions>
       </Dialog>
 
-      {/* Terms of Use Modal */}
+
       <Dialog
         open={openTerms}
         onClose={handleCloseTerms}

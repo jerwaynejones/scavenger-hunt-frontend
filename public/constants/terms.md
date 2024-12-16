@@ -1,5 +1,3 @@
-# Terms of Use
-
 **Last Updated:** 12/16/2024
 
 Welcome to **ScavengerHuntWizard.com** ("we," "our," or "us"). By accessing or using this website (the "Website"), you agree to be bound by these Terms of Use. If you do not agree, please discontinue using the Website.
