@@ -1,4 +1,4 @@
-// src/components/LocationInput.js
+
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, List, ListItem, ListItemText } from '@mui/material';
 

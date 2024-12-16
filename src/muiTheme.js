@@ -26,7 +26,7 @@ const muiTheme = createTheme({
         borderRadius: 12, // Consistent border radius across components
     },
     typography: {
-        fontFamily: 'Montserrat, Raleway, sans-serif',
+        fontFamily: "Montserrat",
         h1: {
             fontWeight: 700,
             fontSize: '2.125rem',

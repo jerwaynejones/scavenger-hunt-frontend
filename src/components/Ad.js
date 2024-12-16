@@ -1,4 +1,4 @@
-// Ad.js
+
 import React from 'react';
 
 const AdSlot = ({ client, slot, format = 'auto', responsive = 'true', style = { display: 'block', minHeight: '250px', width: '100%' } }) => {

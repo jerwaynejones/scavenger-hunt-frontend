@@ -9,7 +9,7 @@ function PrintOutput({ hunt, onBack }) {
     const handleBookmark = () => {
         const currentUrl = window.location.href;
 
-        // Copy the URL to the clipboard
+
         navigator.clipboard.writeText(currentUrl).then(() => {
             alert('Link copied to clipboard! Press Ctrl+D (or Command+D on Mac) to bookmark this page.');
         }).catch((err) => {
