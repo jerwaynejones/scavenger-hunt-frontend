@@ -50,8 +50,6 @@ The application is structured around several key components that manage differen
 
 Navigate through the app using a step-by-step process facilitated by a stepper component.
 
-
-
 ## License
 
 See the [LICENSE.md](LICENSE.md) file for details.
