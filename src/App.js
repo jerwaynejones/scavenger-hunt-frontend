@@ -4,7 +4,7 @@ import './App.css';
 import GiftDescription from './components/GiftDescription';
 import ClueGenerator from './components/ClueGenerator';
 import PrintOutput from './components/PrintOutput';
-import AdSlot from './components/Ad'; // Imported AdSlot
+import AdSlot from './components/Ad';
 import { ThemeProvider } from '@mui/material/styles';
 import muiTheme from './muiTheme';
 import CssBaseline from '@mui/material/CssBaseline';
